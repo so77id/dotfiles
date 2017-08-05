@@ -1,6 +1,7 @@
 LN_COMMAND=ln -s -f
 
-ZSH_FOLDER=./zsh
+
+ZSH_FOLDER=$(PWD)/zsh
 ZSHRC_FILE=.zshrc
 ZSHRC_LOCAL_FILE=.zshrc.local
 
