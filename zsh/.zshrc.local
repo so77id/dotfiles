@@ -40,7 +40,8 @@ antigen bundle KasperChristensen/mylocation
 #https://github.com/unixorn/tumult.plugin.zsh#included-scripts
 #antigen bundle unixorn/tumult.plugin.zsh
 
-
+# https://github.com/zsh-users/zsh-autosuggestions
+antigen bundle zsh-users/zsh-autosuggestions
 # Load the theme.
 # antigen theme git@github.com:so77id/bullet-train.zsh.git bullet-train
 POWERLEVEL9K_INSTALLATION_PATH=$ANTIGEN_BUNDLES/bhilburn/powerlevel9k
@@ -54,6 +55,10 @@ antigen apply
 ###################################################################################################################
 #######################################        Override theme        ##############################################
 ###################################################################################################################
+
+# RUN spectrum_ls for colors
+
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=245'
 
 # # ORDER OF THEME
 #  BULLETTRAIN_PROMPT_ORDER=(
