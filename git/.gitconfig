@@ -188,3 +188,6 @@
 [url "git://gist.github.com/"]
 
 	insteadOf = "gist:"
+[user]
+	name = Miguel Rodriguez
+	email = m.rodriguezs1990@gmail.com
