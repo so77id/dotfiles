@@ -19,6 +19,7 @@ TMUXCONF_LOCAL_FILE=.tmux.conf.local
 # Git vars
 GIT_FOLDER=$(DOTFILES_FOLDER)/git
 GITCONFIG_FILE=.gitconfig
+GITIGNORE_FILE=gitignore
 
 
 all: exec
@@ -38,5 +39,6 @@ exec:
 	@echo "[Configuring Git]"
 	@echo "Creating symbolic link for git files."
 	@$(LN_COMMAND) $(GIT_FOLDER)/$(GITCONFIG_FILE) ~/$(GITCONFIG_FILE)
+	@$(LN_COMMAND) $(GIT_FOLDER)/$(GITIGNORE_FILE) ~/.$(GITIGNORE_FILE)
 
 .PHONY: all exec
