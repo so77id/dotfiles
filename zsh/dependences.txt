@@ -1,0 +1,19 @@
+
+######################################
+# https://github.com/b4b4r07/enhancd #
+######################################
+
+#fzy
+brew install fzy
+
+#percol
+pip install percol
+
+#peco
+brew install peco
+
+#fzf
+brew install fzf
+
+# Install shell extensions
+/usr/local/opt/fzf/install
