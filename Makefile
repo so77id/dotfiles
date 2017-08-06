@@ -1,19 +1,24 @@
 LN_COMMAND=ln -s -f
 CURL_COMMAND=curl -L
 
-# ZSH VARS
-ZSH_FOLDER=$(PWD)/zsh
+DOTFILES_FOLDER=$(PWD)
+
+# Zsh vars
+ZSH_FOLDER=$(DOTFILES_FOLDER)/zsh
 ZSHRC_FILE=.zshrc
 ZSHRC_LOCAL_FILE=.zshrc.local
 
 ANTIGET_REPOSITORY=git.io/antigen
 ANTIGEN_FILE=antigen.zsh
 
-
-# TMUX VARS
-TMUX_FOLDER=$(PWD)/tmux
+# Tmux vars
+TMUX_FOLDER=$(DOTFILES_FOLDER)/tmux
 TMUXCONF_FILE=.tmux.conf
 TMUXCONF_LOCAL_FILE=.tmux.conf.local
+
+# Git vars
+GIT_FOLDER=$(DOTFILES_FOLDER)/git
+GITCONFIG_FILE=.gitconfig
 
 
 all: exec
@@ -30,5 +35,8 @@ exec:
 	@echo "Creating symbolic link for tmux files."
 	@$(LN_COMMAND) $(TMUX_FOLDER)/$(TMUXCONF_FILE) ~/$(TMUXCONF_FILE)
 	@$(LN_COMMAND) $(TMUX_FOLDER)/$(TMUXCONF_LOCAL_FILE) ~/$(TMUXCONF_LOCAL_FILE)
+	@echo "[Configuring Git]"
+	@echo "Creating symbolic link for git files."
+	@$(LN_COMMAND) $(GIT_FOLDER)/$(GITCONFIG_FILE) ~/$(GITCONFIG_FILE)
 
 .PHONY: all exec
