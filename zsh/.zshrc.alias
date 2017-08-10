@@ -1,6 +1,7 @@
 #Shotcuts
 alias cdw="cd ~/Desktop/workspace"
 alias cdm="cd ~/Desktop/workspace/master"
+alias cdr="cd ~/Desktop/workspace/ruvix"
 alias dotfiles="cd ~/.dotfiles"
 
 
