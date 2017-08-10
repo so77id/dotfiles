@@ -22,6 +22,7 @@ antigen bundle pip
 antigen bundle lein
 antigen bundle command-not-found
 
+antigen bundle ssh-agent
 # Syntax highlighting bundle.
 antigen bundle zdharma/fast-syntax-highlighting
 
@@ -91,127 +92,18 @@ POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status root_indicator background_jobs aws rb
 ###################################################################################################################
 #######################################     Enviroment variables     ##############################################
 ###################################################################################################################
-#FOR ZSH IN MAC
-export EVENT_NOKQUEUE=1
+source ~/.dotfiles/zsh/.zshrc.exports
 
-# go
-export GOROOT=/usr/local/opt/go/libexec
-export GOPATH=$HOME/Desktop/workspace/golang
-export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
-
-# RBENV
-export PATH="$HOME/.rbenv/versions/2.3.1/bin:$PATH"
-if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
-
-# ADD to path
-export PATH=/usr/local/bin:$PATH
-export PATH=LOCAL_PATH:$PATH
-
-
-# Virtualenv/VirtualenvWrapper
-source /usr/local/bin/virtualenvwrapper.sh
 
 ###################################################################################################################
 ##############################################    Functions    ####################################################
 ###################################################################################################################
-
-# FileSearch
-function f() { find . -iname "*$1*" ${@:2} }
-function r() { grep "$1" ${@:2} -R . }
-
-# `tre` is a shorthand for `tree` with hidden files and color enabled, ignoring
-# the `.git` directory, listing directories first. The output gets piped into
-# `less` with options to preserve color and line numbers, unless the output is
-# small enough for one screen.
-function tre() {
-    tree -aC -I '.git|node_modules|bower_components' --dirsfirst "$@" | less -FRNX;
-}
-
-# Determine size of a file or total size of a directory
-function fs() {
-    if du -b /dev/null > /dev/null 2>&1; then
-        local arg=-sbh;
-    else
-        local arg=-sh;
-    fi
-    if [[ -n "$@" ]]; then
-        du $arg -- "$@";
-    else
-        du $arg .[^.]* ./*;
-    fi;
-}
-
-# Create a git.io short URL
-function gitio() {
-    if [ -z "${1}" -o -z "${2}" ]; then
-        echo "Usage: \`gitio slug url\`";
-        return 1;
-    fi;
-    curl -i https://git.io/ -F "url=${2}" -F "code=${1}";
-}
-
-# Syntax-highlight JSON strings or files
-# Usage: `json '{"foo":42}'` or `echo '{"foo":42}' | json`
-function json() {
-    if [ -t 0 ]; then # argument
-        python -mjson.tool <<< "$*" | pygmentize -l javascript;
-    else # pipe
-        python -mjson.tool | pygmentize -l javascript;
-    fi;
-}
+source ~/.dotfiles/zsh/.zshrc.functions
 
 
 ###################################################################################################################
 ##############################################      Alias     #####################################################
 ###################################################################################################################
-#Shotcuts
-alias cdw="cd ~/Desktop/workspace"
-alias cdm="cd ~/Desktop/workspace/master"
-alias dotfiles="cd ~/.dotfiles"
-
-
-# GIT COMMANDS
-alias gcd="git checkout development"
-
-#RAILS COMMANDS
-alias rdbd="bundle exec rake db:drop"
-alias rdbc="bundle exec rake db:create"
-alias rdbm="bundle exec rake db:migrate"
-alias rdbs="bundle exec rake db:seed"
-alias rdbr="bundle exec rake db:drop && bundle exec rake db:create && bundle exec rake db:migrate && bundle exec rake db:seed"
-alias bea="bundle exec annotate"
-alias berr="bundle exec rake routes"
-
-#Sidekiq
-alias bes="bundle exec sidekiq"
-
-#PSQL command
-alias psqls="pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start"
-
-#neo vim
-alias v="nvim"
-
-#ZSH
-# Use sublimetext for editing config files
-alias zshconfig="subl ~/.zshrc"
-alias zshconfigl="subl ~/.zshrc.local"
-alias reload="source ~/.zshrc"
-
-
-# Lock the screen (when going AFK)
-alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
-# Lock the screen with sleep
-alias sleep="pmset sleepnow"
-
-
-
-# IP addresses
-alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
-alias localip="ipconfig getifaddr en0"
-alias ips="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[0-9]\+\)\|[a-fA-F0-9:]\+\)' | awk '{ sub(/inet6? (addr:)? ?/, \"\"); print }'"
-
-# Show active network interfaces
-alias ifactive="ifconfig | pcregrep -M -o '^[^\t:]+:([^\n]|\n\t)*status: active'"
-
+source ~/.dotfiles/zsh/.zshrc.alias
 
 

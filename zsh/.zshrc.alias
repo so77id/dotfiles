@@ -1,0 +1,48 @@
+#Shotcuts
+alias cdw="cd ~/Desktop/workspace"
+alias cdm="cd ~/Desktop/workspace/master"
+alias dotfiles="cd ~/.dotfiles"
+
+
+# GIT COMMANDS
+alias gcd="git checkout development"
+
+#RAILS COMMANDS
+alias rdbd="bundle exec rake db:drop"
+alias rdbc="bundle exec rake db:create"
+alias rdbm="bundle exec rake db:migrate"
+alias rdbs="bundle exec rake db:seed"
+alias rdbr="bundle exec rake db:drop && bundle exec rake db:create && bundle exec rake db:migrate && bundle exec rake db:seed"
+alias bea="bundle exec annotate"
+alias berr="bundle exec rake routes"
+
+#Sidekiq
+alias bes="bundle exec sidekiq"
+
+#PSQL command
+alias psqls="pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start"
+
+#neo vim
+alias v="nvim"
+
+#ZSH
+# Use sublimetext for editing config files
+alias zshconfig="subl ~/.zshrc"
+alias zshconfigl="subl ~/.zshrc.local"
+alias reload="source ~/.zshrc"
+
+
+# Lock the screen (when going AFK)
+alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
+# Lock the screen with sleep
+alias sleep="pmset sleepnow"
+
+
+
+# IP addresses
+alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
+alias localip="ipconfig getifaddr en0"
+alias ips="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[0-9]\+\)\|[a-fA-F0-9:]\+\)' | awk '{ sub(/inet6? (addr:)? ?/, \"\"); print }'"
+
+# Show active network interfaces
+alias ifactive="ifconfig | pcregrep -M -o '^[^\t:]+:([^\n]|\n\t)*status: active'"

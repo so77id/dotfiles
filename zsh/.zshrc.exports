@@ -1,0 +1,19 @@
+#FOR ZSH IN MAC
+export EVENT_NOKQUEUE=1
+
+# go
+export GOROOT=/usr/local/opt/go/libexec
+export GOPATH=$HOME/Desktop/workspace/golang
+export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
+
+# RBENV
+export PATH="$HOME/.rbenv/versions/2.3.1/bin:$PATH"
+if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+
+# ADD to path
+export PATH=/usr/local/bin:$PATH
+export PATH=LOCAL_PATH:$PATH
+
+
+# Virtualenv/VirtualenvWrapper
+source /usr/local/bin/virtualenvwrapper.sh
