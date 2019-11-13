@@ -2,7 +2,7 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/so77id/.oh-my-zsh
+export ZSH=/Users/mrodriguez/.oh-my-zsh
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
@@ -90,3 +90,35 @@ source ~/.dotfiles/zsh/.zshrc.local
 
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export GOPATH=/Users/mrodriguez/workspace/golang
+export GOROOT=/usr/local/opt/go/libexec
+export PATH=$PATH:$GOPATH/bin
+export PATH=$PATH:$GOROOT/bin
+# NVM
+export NVM_DIR=~/.nvm
+source $(brew --prefix nvm)/nvm.sh
+# NVM
+export NVM_DIR=~/.nvm
+source $(brew --prefix nvm)/nvm.sh
+# NVM
+export NVM_DIR=~/.nvm
+source $(brew --prefix nvm)/nvm.sh
+if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+# GoLang
+export GOPATH=/Users/mrodriguez/workspace/golang
+export GOROOT=/usr/local/opt/go/libexec
+export PATH=$PATH:$GOPATH/bin
+export PATH=$PATH:$GOROOT/bin
+# NVM
+export NVM_DIR=~/.nvm
+source $(brew --prefix nvm)/nvm.sh
+if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+# GoLang
+export GOPATH=/Users/mrodriguez/workspace/golang
+export GOROOT=/usr/local/opt/go/libexec
+export PATH=$PATH:$GOPATH/bin
+export PATH=$PATH:$GOROOT/bin
+# NVM
+export NVM_DIR=~/.nvm
+source $(brew --prefix nvm)/nvm.sh
+if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi

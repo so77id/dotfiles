@@ -193,3 +193,8 @@
 [user]
 	name = Miguel Rodriguez
 	email = m.rodriguezs1990@gmail.com
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true

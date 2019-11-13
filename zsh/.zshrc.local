@@ -64,10 +64,10 @@ antigen bundle zsh-users/zsh-autosuggestions
 # Load the theme.
 # antigen theme git@github.com:so77id/bullet-train.zsh.git bullet-train
 POWERLEVEL9K_INSTALLATION_PATH=$ANTIGEN_BUNDLES/bhilburn/powerlevel9k
-antigen theme bhilburn/powerlevel9k powerlevel9k
+antigen theme romkatv/powerlevel10k
 # Tell Antigen that you're done.
 
-
+source <(kubectl completion zsh)
 antigen apply
 
 
@@ -106,6 +106,3 @@ POWERLEVEL9K_CONTEXT_TEMPLATE="%n"
 
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs command_execution_time)
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status root_indicator background_jobs aws rbenv go_version time)
-
-
-
