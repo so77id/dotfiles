@@ -7,6 +7,7 @@ DOTFILES_FOLDER=$(PWD)
 ZSH_FOLDER=$(DOTFILES_FOLDER)/zsh
 ZSHRC_FILE=.zshrc
 ZSHRC_LOCAL_FILE=.zshrc.local
+P10K_FILE=.p10k.zsh
 
 ANTIGET_REPOSITORY=git.io/antigen
 ANTIGEN_FILE=antigen.zsh
@@ -32,6 +33,7 @@ exec:
 	@echo "Creating symbolic link for zsh files."
 	@$(LN_COMMAND) $(ZSH_FOLDER)/$(ZSHRC_FILE) ~/$(ZSHRC_FILE)
 	@$(LN_COMMAND) $(ZSH_FOLDER)/$(ZSHRC_LOCAL_FILE) ~/$(ZSHRC_LOCAL_FILE)
+	@$(LN_COMMAND) $(ZSH_FOLDER)/$(P10K_FILE) ~/$(P10K_FILE)
 	@echo "[Configuring Tmux]"
 	@echo "Creating symbolic link for tmux files."
 	@$(LN_COMMAND) $(TMUX_FOLDER)/$(TMUXCONF_FILE) ~/$(TMUXCONF_FILE)
