@@ -111,3 +111,5 @@ source ~/.dotfiles/zsh/.zshrc.local
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+export PATH=~/anaconda3/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/miguel.rodriguez53/.antigen/bundles/robbyrussell/oh-my-zsh/lib:/Users/miguel.rodriguez53/.antigen/bundles/zdharma/fast-syntax-highlighting:/Users/miguel.rodriguez53/.antigen/bundles/zsh-users/zsh-autosuggestions:/Users/miguel.rodriguez53/.antigen/bundles/romkatv/powerlevel10k
+if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
