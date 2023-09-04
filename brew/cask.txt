@@ -1,0 +1,11 @@
+visual-studio-code
+obsidian
+yt-music
+spotify
+whatsapp
+docker
+CakeBrew
+appcleaner
+coconutbattery
+slack
+steam

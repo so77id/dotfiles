@@ -22,6 +22,21 @@ GIT_FOLDER=$(DOTFILES_FOLDER)/git
 GITCONFIG_FILE=.gitconfig
 GITIGNORE_FILE=gitignore
 
+#Brew vars
+BREW_FOLDER=$(DOTFILES_FOLDER)/brew
+BREW_NON_CASK_FILE=non_cask.txt
+BREW_CASK_FILE=cask.txt
+MAS_FILE=from_app_store.txt
+
+BREW_INSTALL_COMMAND=/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+BREW_EXEC=eval "$(/opt/homebrew/bin/brew shellenv)"
+BREW_COMMAND=brew install
+BREW_CASK_COMMAND=brew install --cask
+MAS_COMMAND=mas install
+
+
+#Xcode vars
+XCODE_INSTALL_COMMAND=xcode-select --install
 
 all: exec
 
@@ -42,5 +57,17 @@ exec:
 	@echo "Creating symbolic link for git files."
 	@$(LN_COMMAND) $(GIT_FOLDER)/$(GITCONFIG_FILE) ~/$(GITCONFIG_FILE)
 	@$(LN_COMMAND) $(GIT_FOLDER)/$(GITIGNORE_FILE) ~/.$(GITIGNORE_FILE)
+	@echo "[Installing brew]"
+	@$(BREW_INSTALL_COMMAND)
+	@$(BREW_EXEC)
+	@echo "[Installing apps by brew]"
+	@$(BREW_COMMAND) $(shell cat ${BREW_FOLDER}/${BREW_NON_CASK_FILE})
+	@$(BREW_CASK_COMMAND) $(shell cat ${BREW_FOLDER}/${BREW_CASK_FILE})
+	@$(MAS_COMMAND) $(shell cat ${BREW_FOLDER}/${MAS_FILE})
+
+	@echo "[Installing Xcode]"
+	@$(XCODE_INSTALL_COMMAND)
+	@echo "[Configuration finished]"
+
 
 .PHONY: all exec

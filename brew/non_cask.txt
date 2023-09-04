@@ -1,0 +1,9 @@
+htop
+wget
+tree
+kubernetes-cli
+k9s
+awscli
+mas
+zip
+unzip

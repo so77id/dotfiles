@@ -108,3 +108,6 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=245'
 #
 # POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs command_execution_time)
 # POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status root_indicator background_jobs aws rbenv go_version time)
+
+# Brew command
+eval "$(/opt/homebrew/bin/brew shellenv)"
