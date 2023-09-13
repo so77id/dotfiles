@@ -64,7 +64,7 @@ unix_instalation_function:
 	@$(LN_COMMAND) $(ZSH_FOLDER)/$(ZSHRC_FILE) ~/$(ZSHRC_FILE)
 	@$(LN_COMMAND) $(ZSH_FOLDER)/$(ZSHRC_LOCAL_FILE) ~/$(ZSHRC_LOCAL_FILE)
 	@$(LN_COMMAND) $(ZSH_FOLDER)/$(P10K_FILE) ~/$(P10K_FILE)
-	@source ~/.zshrc
+	@. ~/.zshrc
 	@echo "[Configuring Tmux]"
 	@echo "Creating symbolic link for tmux files."
 	@$(LN_COMMAND) $(TMUX_FOLDER)/$(TMUXCONF_FILE) ~/$(TMUXCONF_FILE)
