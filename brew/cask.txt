@@ -5,6 +5,7 @@ docker
 font-meslo-lg-nerd-font
 iterm2
 keepingyouawake
+postman
 rectangle
 slack
 visual-studio-code
