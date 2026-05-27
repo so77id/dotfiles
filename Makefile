@@ -48,7 +48,7 @@ ifeq ($(UNAME_S),Linux)
 RUN_FUNCTION = linux_install
 endif
 
-.PHONY: all install symlinks brew_install brew_packages omz plugins mac_install linux_install dotfiles_link
+.PHONY: all install symlinks brew_install brew_packages omz plugins iterm2 mac_install linux_install dotfiles_link
 
 all: install
 
@@ -57,7 +57,7 @@ install: $(RUN_FUNCTION)
 # ------------------------------------------------------------
 # Bootstrap macOS completo
 # ------------------------------------------------------------
-mac_install: brew_install brew_packages omz plugins symlinks
+mac_install: brew_install brew_packages omz plugins symlinks iterm2
 	@echo ""
 	@echo "[OK] Instalación completa. Abre una nueva terminal o corre: source ~/.zshrc"
 
@@ -207,6 +207,31 @@ plugins:
 			fi; \
 		fi; \
 	done
+
+# ------------------------------------------------------------
+# iTerm2 color preset (Dynamic Profile)
+# ------------------------------------------------------------
+ITERM2_DYN_DIR    = $(HOME)/Library/Application Support/iTerm2/DynamicProfiles
+ITERM2_PRESET     = $(DOTFILES_FOLDER)/iterm2/AtelierSulphurpool.itermcolors
+ITERM2_DYN_FILE   = $(ITERM2_DYN_DIR)/AtelierSulphurpool.json
+ITERM2_GUID       = AtelierSulphurpool-dotfiles
+
+iterm2:
+	@echo ""
+	@echo "═══ [iTerm2] Color preset ═══"
+	@if ! command -v jq >/dev/null 2>&1; then \
+		printf "  \033[33m⚠ jq no encontrado, saltando\033[0m\n"; \
+	else \
+		mkdir -p "$(ITERM2_DYN_DIR)"; \
+		LOG=/tmp/iterm2-preset.log; \
+		if gum spin --spinner dot --title "Generando perfil dinámico..." -- bash -c "plutil -convert json -o - '$(ITERM2_PRESET)' | jq '{Profiles: [. + {Name: \"AtelierSulphurpool\", Guid: \"$(ITERM2_GUID)\"}]}' > '$(ITERM2_DYN_FILE)' 2> '$$LOG'"; then \
+			printf "  \033[32m✓ Perfil 'AtelierSulphurpool' disponible en iTerm2\033[0m\n"; \
+			printf "  \033[33m→ Activa una vez: iTerm2 → Settings → Profiles → AtelierSulphurpool → Other Actions → Set as Default\033[0m\n"; \
+		else \
+			printf "  \033[31m✗ Falló generación\033[0m — log: %s\n" "$$LOG"; \
+			tail -5 "$$LOG" | sed 's/^/        /'; \
+		fi; \
+	fi
 
 # ------------------------------------------------------------
 # Symlinks de archivos de configuración
