@@ -48,7 +48,7 @@ ifeq ($(UNAME_S),Linux)
 RUN_FUNCTION = linux_install
 endif
 
-.PHONY: all install symlinks brew_install brew_packages omz plugins iterm2 default_browser mac_install linux_install dotfiles_link
+.PHONY: all install symlinks brew_install brew_packages omz plugins iterm2 default_browser macos_settings mac_install linux_install dotfiles_link
 
 all: install
 
@@ -57,9 +57,10 @@ install: $(RUN_FUNCTION)
 # ------------------------------------------------------------
 # Bootstrap macOS completo
 # ------------------------------------------------------------
-mac_install: brew_install brew_packages omz plugins symlinks iterm2 default_browser
+mac_install: brew_install brew_packages omz plugins symlinks iterm2 default_browser macos_settings
 	@echo ""
 	@echo "[OK] Instalación completa. Abre una nueva terminal o corre: source ~/.zshrc"
+	@echo "    Algunos cambios de idioma/teclado requieren logout para tomar efecto."
 
 # ------------------------------------------------------------
 # Linux (esqueleto)
@@ -236,6 +237,35 @@ iterm2:
 			printf "  \033[33m⚠ No pude setear default (hazlo manual)\033[0m\n"; \
 	fi
 	@printf "  \033[33m→ Reinicia iTerm2 (Cmd+Q y vuelve a abrir) para que cargue el perfil y la fuente\033[0m\n"
+
+# ------------------------------------------------------------
+# macOS system settings: idioma + teclado + timezone
+# ------------------------------------------------------------
+macos_settings:
+	@echo ""
+	@echo "═══ [macOS] Idioma, teclado, timezone ═══"
+	@printf "  → Idioma UI: English primary, Spanish fallback\n"
+	@defaults write NSGlobalDomain AppleLanguages -array "en-US" "es-CL"
+	@defaults write NSGlobalDomain AppleLocale -string "es_CL@currency=CLP"
+	@printf "  \033[32m✓ AppleLanguages = [en-US, es-CL]\033[0m\n"
+	@printf "  \033[32m✓ AppleLocale = es_CL (formatos chilenos, UI inglés)\033[0m\n"
+	@printf "  → Teclado: US (default) + Latin American\n"
+	@defaults write com.apple.HIToolbox AppleEnabledInputSources -array \
+		'{InputSourceKind = "Keyboard Layout"; "KeyboardLayout ID" = 0; "KeyboardLayout Name" = "U.S.";}' \
+		'{InputSourceKind = "Keyboard Layout"; "KeyboardLayout ID" = -3; "KeyboardLayout Name" = "Latin American";}'
+	@defaults write com.apple.HIToolbox AppleCurrentKeyboardLayoutInputSourceID -string "com.apple.keylayout.US"
+	@printf "  \033[32m✓ Input sources: U.S. (default) + Latin American\033[0m\n"
+	@printf "  \033[90m   Cambia entre ellos con Ctrl+Space (configurable en Settings → Keyboard)\033[0m\n"
+	@printf "  → Timezone: America/Santiago (requiere sudo)\n"
+	@CURRENT_TZ=$$(sudo systemsetup -gettimezone 2>/dev/null | sed 's/.*: //'); \
+	if [ "$$CURRENT_TZ" = "America/Santiago" ]; then \
+		printf "  \033[90m✓ Timezone ya es America/Santiago\033[0m\n"; \
+	else \
+		sudo systemsetup -settimezone "America/Santiago" >/dev/null 2>&1 && \
+			printf "  \033[32m✓ Timezone seteado a America/Santiago\033[0m\n" || \
+			printf "  \033[31m✗ No pude setear timezone (ver permisos)\033[0m\n"; \
+	fi
+	@printf "  \033[33m→ Idioma/teclado: haz logout (Cmd+Shift+Q) o reinicia para aplicar completo\033[0m\n"
 
 # ------------------------------------------------------------
 # Default browser
