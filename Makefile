@@ -70,14 +70,16 @@ linux_install: omz plugins symlinks
 # ------------------------------------------------------------
 # Homebrew
 # ------------------------------------------------------------
+# Detectar prefix según arquitectura (M1+ vs Intel)
+BREW_PREFIX := $(shell [ -x /opt/homebrew/bin/brew ] && echo /opt/homebrew || ([ -x /usr/local/bin/brew ] && echo /usr/local))
+
 brew_install:
 	@echo "[Homebrew] Verificando instalación..."
-	@if ! command -v brew >/dev/null 2>&1; then \
-		echo "  Instalando Homebrew..."; \
-		/bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"; \
-		eval "$$(/opt/homebrew/bin/brew shellenv)"; \
+	@if [ -n "$(BREW_PREFIX)" ]; then \
+		echo "  ✓ Homebrew ya está instalado en $(BREW_PREFIX). Saltando."; \
 	else \
-		echo "  Homebrew ya está instalado."; \
+		echo "  Instalando Homebrew..."; \
+		NONINTERACTIVE=1 /bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"; \
 	fi
 
 brew_packages:
