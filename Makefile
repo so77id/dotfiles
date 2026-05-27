@@ -141,11 +141,14 @@ brew_packages:
 				printf "  [%2d/%d] \033[90m✓ id:%s (ya instalado)\033[0m\n" $$I $$TOTAL "$$id"; \
 			else \
 				LOG=/tmp/mas-$$id.log; \
-				if gum spin --spinner dot --title "[$$I/$$TOTAL] App Store id:$$id..." -- bash -c "mas install '$$id' > '$$LOG' 2>&1"; then \
+				if gum spin --spinner dot --title "[$$I/$$TOTAL] App Store id:$$id..." -- bash -c "mas get '$$id' > '$$LOG' 2>&1"; then \
 					printf "  [%2d/%d] \033[32m✓ id:%s\033[0m\n" $$I $$TOTAL "$$id"; \
 				else \
-					printf "  [%2d/%d] \033[31m✗ id:%s\033[0m — verifica login + biblioteca (%s):\n" $$I $$TOTAL "$$id" "$$LOG"; \
-					tail -5 "$$LOG" | sed 's/^/        /'; \
+					printf "  [%2d/%d] \033[31m✗ id:%s\033[0m — \033[33mhazlo manual:\033[0m\n" $$I $$TOTAL "$$id"; \
+					printf "        1. Abre App Store, busca la app por id (mas open %s)\n" "$$id"; \
+					printf "        2. Click en 'Get/Obtener' (solo necesario la primera vez)\n"; \
+					printf "        3. Vuelve a correr 'make install'\n"; \
+					printf "        Log: %s\n" "$$LOG"; \
 				fi; \
 			fi; \
 		done; \
