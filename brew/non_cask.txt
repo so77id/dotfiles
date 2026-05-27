@@ -1,6 +1,7 @@
 awscli
 bat
 defaultbrowser
+duti
 eza
 fd
 fzf

@@ -274,20 +274,24 @@ default_browser:
 	@echo ""
 	@echo "═══ [Default browser] Brave ═══"
 	@eval "$$(/opt/homebrew/bin/brew shellenv)" && \
-	if ! command -v defaultbrowser >/dev/null 2>&1; then \
-		printf "  \033[33m⚠ defaultbrowser no encontrado, saltando\033[0m\n"; \
-	elif [ ! -d "/Applications/Brave Browser.app" ]; then \
+	if [ ! -d "/Applications/Brave Browser.app" ]; then \
 		printf "  \033[33m⚠ Brave no instalado todavía, saltando\033[0m\n"; \
 	else \
-		CURRENT=$$(defaultbrowser 2>/dev/null | grep -E '^\* ' | sed 's/^\* //'); \
-		if [ "$$CURRENT" = "brave" ]; then \
+		CURRENT_HANDLER=$$(/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -dump 2>/dev/null | grep -B2 "bindings:.*https:" | grep "bundle id:" | head -1 | awk '{print $$3}'); \
+		if [ "$$CURRENT_HANDLER" = "com.brave.Browser" ] || [ "$$CURRENT_HANDLER" = "Brave" ]; then \
 			printf "  \033[90m✓ Brave ya es el default\033[0m\n"; \
 		else \
-			printf "  → Pidiendo a macOS cambiar default a Brave...\n"; \
-			printf "  \033[33m⚠ Aparecerá un dialog del sistema — click \"Use Brave\"\033[0m\n"; \
-			defaultbrowser brave 2>/dev/null && \
-				printf "  \033[32m✓ Brave seteado como default (acepta el dialog si aparece)\033[0m\n" || \
-				printf "  \033[31m✗ Falló — corre 'defaultbrowser brave' manualmente\033[0m\n"; \
+			printf "  → Intentando setear via duti (requiere autorización macOS)...\n"; \
+			if command -v duti >/dev/null 2>&1 && duti -s com.brave.Browser https 2>/dev/null && duti -s com.brave.Browser http 2>/dev/null; then \
+				printf "  \033[32m✓ Brave seteado como default browser\033[0m\n"; \
+			else \
+				printf "  \033[33m⚠ macOS bloquea cambio automático (esto es por seguridad)\033[0m\n"; \
+				printf "  → Abriendo Brave para que muestre su prompt de default...\n"; \
+				open -a "Brave Browser"; \
+				printf "  \033[33m   1. En Brave: dialog \"Make default\" → click Set as default\033[0m\n"; \
+				printf "  \033[33m   2. macOS: dialog \"Use Brave Browser\" → click Use Brave Browser\033[0m\n"; \
+				printf "  \033[33m   (Alternativa: System Settings → Default Web Browser → Brave)\033[0m\n"; \
+			fi; \
 		fi; \
 	fi
 
