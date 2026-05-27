@@ -9,6 +9,7 @@ gh
 gum
 htop
 jq
+jupyterlab
 mas
 neovim
 ripgrep

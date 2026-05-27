@@ -4,6 +4,7 @@ claude-code
 docker
 font-meslo-lg-nerd-font
 iterm2
+jupyter-notebook-ql
 keepingyouawake
 notion
 postman
