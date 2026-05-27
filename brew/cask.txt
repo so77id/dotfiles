@@ -2,6 +2,7 @@ claude
 claude-code
 docker
 iterm2
+keepingyouawake
 rectangle
 slack
 visual-studio-code
