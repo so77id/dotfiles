@@ -219,7 +219,8 @@ ITERM2_GUID       = AtelierSulphurpool-dotfiles
 iterm2:
 	@echo ""
 	@echo "═══ [iTerm2] Color preset ═══"
-	@if ! command -v jq >/dev/null 2>&1; then \
+	@eval "$$(/opt/homebrew/bin/brew shellenv)" && \
+	if ! command -v jq >/dev/null 2>&1; then \
 		printf "  \033[33m⚠ jq no encontrado, saltando\033[0m\n"; \
 	else \
 		mkdir -p "$(ITERM2_DYN_DIR)"; \
@@ -229,7 +230,7 @@ iterm2:
 			printf "  \033[33m→ Activa una vez: iTerm2 → Settings → Profiles → AtelierSulphurpool → Other Actions → Set as Default\033[0m\n"; \
 		else \
 			printf "  \033[31m✗ Falló generación\033[0m — log: %s\n" "$$LOG"; \
-			tail -5 "$$LOG" | sed 's/^/        /'; \
+			tail -5 "$$LOG" 2>/dev/null | sed 's/^/        /'; \
 		fi; \
 	fi
 
