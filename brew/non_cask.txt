@@ -1,13 +1,18 @@
+atuin
 awscli
 bat
+bottom
 defaultbrowser
 duti
 eza
 fd
+ffmpeg
 fzf
 gh
+glow
 gum
 htop
+imagemagick
 jq
 jupyterlab
 mas
@@ -18,3 +23,4 @@ tree
 unzip
 wget
 zip
+zoxide
