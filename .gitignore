@@ -14,3 +14,6 @@ Thumbs.db
 .Trashes
 
 *.zwc
+
+# Claude Code local settings (per-user)
+.claude/
