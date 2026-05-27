@@ -48,7 +48,7 @@ ifeq ($(UNAME_S),Linux)
 RUN_FUNCTION = linux_install
 endif
 
-.PHONY: all install symlinks brew_install brew_packages omz plugins iterm2 mac_install linux_install dotfiles_link
+.PHONY: all install symlinks brew_install brew_packages omz plugins iterm2 default_browser mac_install linux_install dotfiles_link
 
 all: install
 
@@ -57,7 +57,7 @@ install: $(RUN_FUNCTION)
 # ------------------------------------------------------------
 # Bootstrap macOS completo
 # ------------------------------------------------------------
-mac_install: brew_install brew_packages omz plugins symlinks iterm2
+mac_install: brew_install brew_packages omz plugins symlinks iterm2 default_browser
 	@echo ""
 	@echo "[OK] Instalación completa. Abre una nueva terminal o corre: source ~/.zshrc"
 
@@ -236,6 +236,30 @@ iterm2:
 			printf "  \033[33m⚠ No pude setear default (hazlo manual)\033[0m\n"; \
 	fi
 	@printf "  \033[33m→ Reinicia iTerm2 (Cmd+Q y vuelve a abrir) para que cargue el perfil y la fuente\033[0m\n"
+
+# ------------------------------------------------------------
+# Default browser
+# ------------------------------------------------------------
+default_browser:
+	@echo ""
+	@echo "═══ [Default browser] Brave ═══"
+	@eval "$$(/opt/homebrew/bin/brew shellenv)" && \
+	if ! command -v defaultbrowser >/dev/null 2>&1; then \
+		printf "  \033[33m⚠ defaultbrowser no encontrado, saltando\033[0m\n"; \
+	elif [ ! -d "/Applications/Brave Browser.app" ]; then \
+		printf "  \033[33m⚠ Brave no instalado todavía, saltando\033[0m\n"; \
+	else \
+		CURRENT=$$(defaultbrowser 2>/dev/null | grep -E '^\* ' | sed 's/^\* //'); \
+		if [ "$$CURRENT" = "brave" ]; then \
+			printf "  \033[90m✓ Brave ya es el default\033[0m\n"; \
+		else \
+			printf "  → Pidiendo a macOS cambiar default a Brave...\n"; \
+			printf "  \033[33m⚠ Aparecerá un dialog del sistema — click \"Use Brave\"\033[0m\n"; \
+			defaultbrowser brave 2>/dev/null && \
+				printf "  \033[32m✓ Brave seteado como default (acepta el dialog si aparece)\033[0m\n" || \
+				printf "  \033[31m✗ Falló — corre 'defaultbrowser brave' manualmente\033[0m\n"; \
+		fi; \
+	fi
 
 # ------------------------------------------------------------
 # Symlinks de archivos de configuración

@@ -1,5 +1,6 @@
 awscli
 bat
+defaultbrowser
 eza
 fd
 fzf
