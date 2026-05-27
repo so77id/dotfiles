@@ -85,18 +85,44 @@ brew_install:
 brew_packages:
 	@echo "[Homebrew] Instalando formulae..."
 	@eval "$$(/opt/homebrew/bin/brew shellenv)" && \
-	brew install $$(cat $(BREW_FOLDER)/$(BREW_NON_CASK_FILE))
+	for pkg in $$(cat $(BREW_FOLDER)/$(BREW_NON_CASK_FILE)); do \
+		if brew list --formula "$$pkg" >/dev/null 2>&1; then \
+			echo "  ✓ $$pkg ya instalado"; \
+		else \
+			echo "  → Instalando $$pkg..."; \
+			brew install "$$pkg" || echo "  ✗ Falló $$pkg (continuando)"; \
+		fi; \
+	done
 	@echo "[Homebrew] Instalando casks..."
 	@eval "$$(/opt/homebrew/bin/brew shellenv)" && \
-	brew install --cask $$(cat $(BREW_FOLDER)/$(BREW_CASK_FILE))
+	for cask in $$(cat $(BREW_FOLDER)/$(BREW_CASK_FILE)); do \
+		if brew list --cask "$$cask" >/dev/null 2>&1; then \
+			echo "  ✓ $$cask ya instalado"; \
+		else \
+			echo "  → Instalando $$cask..."; \
+			brew install --cask --adopt "$$cask" || echo "  ✗ Falló $$cask (continuando)"; \
+		fi; \
+	done
 	@echo "[Homebrew] Apps del Mac App Store..."
 	@eval "$$(/opt/homebrew/bin/brew shellenv)" && \
 	if [ -s $(BREW_FOLDER)/$(MAS_FILE) ]; then \
-		mas install $$(cat $(BREW_FOLDER)/$(MAS_FILE)) || true; \
+		for id in $$(cat $(BREW_FOLDER)/$(MAS_FILE)); do \
+			if mas list 2>/dev/null | awk '{print $$1}' | grep -qx "$$id"; then \
+				echo "  ✓ App Store $$id ya instalado"; \
+			else \
+				echo "  → Instalando App Store $$id..."; \
+				mas install "$$id" || echo "  ✗ Falló App Store $$id (verifica que estés logueado y que la app esté en tu biblioteca)"; \
+			fi; \
+		done; \
 	fi
-	@echo "[fzf] Instalando key bindings..."
+	@echo "[fzf] Configurando key bindings..."
 	@eval "$$(/opt/homebrew/bin/brew shellenv)" && \
-	yes | $$(brew --prefix)/opt/fzf/install --key-bindings --completion --no-update-rc >/dev/null
+	if [ -x "$$(brew --prefix)/opt/fzf/install" ]; then \
+		yes | "$$(brew --prefix)/opt/fzf/install" --key-bindings --completion --no-update-rc >/dev/null && \
+		echo "  ✓ fzf configurado"; \
+	else \
+		echo "  ⚠ fzf no encontrado, saltando"; \
+	fi
 
 # ------------------------------------------------------------
 # Oh My Zsh
