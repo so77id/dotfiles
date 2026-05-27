@@ -1,19 +1,19 @@
-#FOR ZSH IN MAC
-export EVENT_NOKQUEUE=1
+# Editor por defecto
+export EDITOR="nvim"
+export VISUAL="nvim"
 
-# go
-#export GOROOT=/usr/local/opt/go/libexec
-#export GOPATH=$HOME/Desktop/workspace/golang
-#export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
+# Locale
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
 
-# RBENV
-#export PATH="$HOME/.rbenv/versions/2.3.1/bin:$PATH"
-#if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+# Historial más grande
+export HISTSIZE=50000
+export SAVEHIST=50000
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_REDUCE_BLANKS
 
-# ADD to path
-#export PATH=/usr/local/bin:$PATH
-#export PATH=LOCAL_PATH:$PATH
+# Less con colores
+export LESS="-R"
 
-
-# Virtualenv/VirtualenvWrapper
-#source /usr/local/bin/virtualenvwrapper.sh
+# bat usa este theme
+export BAT_THEME="Monokai Extended"

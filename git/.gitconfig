@@ -134,7 +134,6 @@
 
 	# https://help.github.com/articles/signing-commits-using-gpg/
 	gpgsign = false
-	template = /Users/miguel.rodriguez53/.gitmessage
 
 [diff]
 
@@ -153,8 +152,15 @@
 
 	# Automatically correct and execute mistyped commands
 	autocorrect = 1
+
 [fetch]
-  prune = true
+	prune = true
+
+[init]
+	defaultBranch = main
+
+[pull]
+	rebase = false
 
 [merge]
 
@@ -163,12 +169,12 @@
 
 [push]
 
-	# Use the Git 1.x.x default to avoid errors on machines with old Git
-	# installations. To use `simple` instead, add this to your `~/.extra` file:
-	# `git config --global push.default simple`. See http://git.io/mMah-w.
-	default = matching
+	# 'simple' es el default desde Git 2.0 y el más seguro
+	default = simple
 	# Make `git push` push relevant annotated tags when pushing branches out.
 	followTags = true
+	# Auto-setup remote tracking en el primer push
+	autoSetupRemote = true
 
 # URL shorthands
 

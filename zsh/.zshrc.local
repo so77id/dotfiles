@@ -1,113 +1,59 @@
 #!/bin/zsh
 
 ###################################################################################################################
-#######################################     Enviroment variables     ##############################################
+#######################################      Variables de entorno      ############################################
 ###################################################################################################################
 source ~/.dotfiles/zsh/.zshrc.exports
 
 
 ###################################################################################################################
-##############################################    Functions    ####################################################
+##############################################      Oh My Zsh     ##################################################
+###################################################################################################################
+export ZSH="$HOME/.oh-my-zsh"
+ZSH_THEME="powerlevel10k/powerlevel10k"
+
+plugins=(
+  zsh-autosuggestions
+  fast-syntax-highlighting
+)
+
+source $ZSH/oh-my-zsh.sh
+
+
+###################################################################################################################
+##############################################    Funciones     ####################################################
 ###################################################################################################################
 source ~/.dotfiles/zsh/.zshrc.functions
 
 
 ###################################################################################################################
-##############################################      Alias     #####################################################
+##############################################      Alias     ######################################################
 ###################################################################################################################
 source ~/.dotfiles/zsh/.zshrc.alias
 
-###################################################################################################################
-#######################################         Blind keys          ###############################################
-###################################################################################################################
 
-bindkey "[D" backward-word
-bindkey "[C" forward-word
+###################################################################################################################
+#######################################         Keybindings          ##############################################
+###################################################################################################################
+bindkey "^[[1;3D" backward-word    # Option + Left
+bindkey "^[[1;3C" forward-word     # Option + Right
 bindkey "^[a" beginning-of-line
 bindkey "^[e" end-of-line
 
-###################################################################################################################
-#######################################    Antigen configurations   ###############################################
-###################################################################################################################
-source ~/.antigen.zsh
-
-# Load the oh-my-zsh's library.
-antigen use oh-my-zsh
-
-# Bundles from the default repo (robbyrussell's oh-my-zsh).
-# antigen bundle git
-# antigen bundle pip
-# antigen bundle lein
-# antigen bundle command-not-found
-
-# antigen bundle ssh-agent
-# Syntax highlighting bundle.
-antigen bundle zdharma/fast-syntax-highlighting
-
-#https://github.com/b4b4r07/enhancd
-#antigen bundle b4b4r07/enhancd
-
-#https://github.com/zdharma/history-search-multi-word use with Ctrl+r
-# antigen bundle psprint/history-search-multi-word
-
-# https://github.com/mafredri/zsh-async
-# antigen bundle mafredri/zsh-async
-
-# https://github.com/KasperChristensen/mylocation
-# antigen bundle KasperChristensen/mylocation
-
-#https://github.com/unixorn/tumult.plugin.zsh#included-scripts
-#antigen bundle unixorn/tumult.plugin.zsh
-
-
-# https://github.com/zsh-users/zsh-autosuggestions
-antigen bundle zsh-users/zsh-autosuggestions
-# Load the theme.
-# antigen theme git@github.com:so77id/bullet-train.zsh.git bullet-train
-# POWERLEVEL9K_INSTALLATION_PATH=$ANTIGEN_BUNDLES/bhilburn/powerlevel9k
-# POWERLEVEL9K_MODE='awesome-fontconfig'
-antigen theme romkatv/powerlevel10k
-# Tell Antigen that you're done.
-
-# source <(kubectl completion zsh)
-antigen apply
-
 
 ###################################################################################################################
-#######################################        Override theme        ##############################################
+#######################################        Estilo plugins        ##############################################
 ###################################################################################################################
-
-# RUN spectrum_ls for colors
-
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=245'
 
-# # ORDER OF THEME
-#  BULLETTRAIN_PROMPT_ORDER=(
-#    time
-#    context
-#    dir
-#    git
-# )
-# POWERLEVEL9K_PROMPT_ON_NEWLINE=true
-# #POWERLEVEL9K_RPROMPT_ON_NEWLINE=true
-# POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX=""
-# POWERLEVEL9K_MULTILINE_SECOND_PROMPT_PREFIX="$ "
-#
-# POWERLEVEL9K_PROMPT_ADD_NEWLINE=true
-#
-# # Output time, date, and a symbol from the "Awesome Powerline Font" set
-# POWERLEVEL9K_TIME_FORMAT="%D{%H:%M}"
-#
-#
-# POWERLEVEL9K_SHORTEN_DIR_LENGTH=1
-# POWERLEVEL9K_CONTEXT_TEMPLATE="%n"
-#
-# # Battery
-# #
-# # export BATTERY_ICON="\U1F50C"
-#
-# POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs command_execution_time)
-# POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status root_indicator background_jobs aws rbenv go_version time)
 
-# Brew command
-eval "$(/opt/homebrew/bin/brew shellenv)"
+###################################################################################################################
+##############################################       fzf       #####################################################
+###################################################################################################################
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+
+###################################################################################################################
+#######################################      Powerlevel10k config    ##############################################
+###################################################################################################################
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
