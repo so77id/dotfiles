@@ -4,6 +4,7 @@ eza
 fd
 fzf
 gh
+gum
 htop
 jq
 mas

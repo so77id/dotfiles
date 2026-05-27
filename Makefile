@@ -83,45 +83,81 @@ brew_install:
 	fi
 
 brew_packages:
-	@echo "[Homebrew] Instalando formulae..."
 	@eval "$$(/opt/homebrew/bin/brew shellenv)" && \
-	for pkg in $$(cat $(BREW_FOLDER)/$(BREW_NON_CASK_FILE)); do \
+	if ! command -v gum >/dev/null 2>&1; then \
+		echo "[Setup] Instalando gum (necesario para UI con spinners)..."; \
+		brew install gum; \
+	fi
+	@echo ""
+	@echo "═══ [Homebrew] Formulae ═══"
+	@eval "$$(/opt/homebrew/bin/brew shellenv)" && \
+	PKGS=$$(cat $(BREW_FOLDER)/$(BREW_NON_CASK_FILE)); \
+	TOTAL=$$(echo "$$PKGS" | wc -l | tr -d ' '); \
+	I=0; \
+	for pkg in $$PKGS; do \
+		I=$$((I + 1)); \
 		if brew list --formula "$$pkg" >/dev/null 2>&1; then \
-			echo "  ✓ $$pkg ya instalado"; \
+			printf "  [%2d/%d] \033[90m✓ %s (ya instalado)\033[0m\n" $$I $$TOTAL "$$pkg"; \
 		else \
-			echo "  → Instalando $$pkg..."; \
-			brew install "$$pkg" || echo "  ✗ Falló $$pkg (continuando)"; \
+			LOG=/tmp/brew-$$pkg.log; \
+			if gum spin --spinner dot --title "[$$I/$$TOTAL] $$pkg..." -- bash -c "brew install '$$pkg' > '$$LOG' 2>&1"; then \
+				printf "  [%2d/%d] \033[32m✓ %s\033[0m\n" $$I $$TOTAL "$$pkg"; \
+			else \
+				printf "  [%2d/%d] \033[31m✗ %s\033[0m — últimas líneas de %s:\n" $$I $$TOTAL "$$pkg" "$$LOG"; \
+				tail -8 "$$LOG" | sed 's/^/        /'; \
+			fi; \
 		fi; \
 	done
-	@echo "[Homebrew] Instalando casks..."
+	@echo ""
+	@echo "═══ [Homebrew] Casks (apps GUI) ═══"
 	@eval "$$(/opt/homebrew/bin/brew shellenv)" && \
-	for cask in $$(cat $(BREW_FOLDER)/$(BREW_CASK_FILE)); do \
+	CASKS=$$(cat $(BREW_FOLDER)/$(BREW_CASK_FILE)); \
+	TOTAL=$$(echo "$$CASKS" | wc -l | tr -d ' '); \
+	I=0; \
+	for cask in $$CASKS; do \
+		I=$$((I + 1)); \
 		if brew list --cask "$$cask" >/dev/null 2>&1; then \
-			echo "  ✓ $$cask ya instalado"; \
+			printf "  [%2d/%d] \033[90m✓ %s (ya instalado)\033[0m\n" $$I $$TOTAL "$$cask"; \
 		else \
-			echo "  → Instalando $$cask..."; \
-			brew install --cask --adopt "$$cask" || echo "  ✗ Falló $$cask (continuando)"; \
+			LOG=/tmp/brew-cask-$$cask.log; \
+			if gum spin --spinner dot --title "[$$I/$$TOTAL] $$cask..." -- bash -c "brew install --cask --adopt '$$cask' > '$$LOG' 2>&1"; then \
+				printf "  [%2d/%d] \033[32m✓ %s\033[0m\n" $$I $$TOTAL "$$cask"; \
+			else \
+				printf "  [%2d/%d] \033[31m✗ %s\033[0m — últimas líneas de %s:\n" $$I $$TOTAL "$$cask" "$$LOG"; \
+				tail -8 "$$LOG" | sed 's/^/        /'; \
+			fi; \
 		fi; \
 	done
-	@echo "[Homebrew] Apps del Mac App Store..."
+	@echo ""
+	@echo "═══ [Mac App Store] ═══"
 	@eval "$$(/opt/homebrew/bin/brew shellenv)" && \
 	if [ -s $(BREW_FOLDER)/$(MAS_FILE) ]; then \
-		for id in $$(cat $(BREW_FOLDER)/$(MAS_FILE)); do \
+		IDS=$$(cat $(BREW_FOLDER)/$(MAS_FILE)); \
+		TOTAL=$$(echo "$$IDS" | wc -l | tr -d ' '); \
+		I=0; \
+		for id in $$IDS; do \
+			I=$$((I + 1)); \
 			if mas list 2>/dev/null | awk '{print $$1}' | grep -qx "$$id"; then \
-				echo "  ✓ App Store $$id ya instalado"; \
+				printf "  [%2d/%d] \033[90m✓ id:%s (ya instalado)\033[0m\n" $$I $$TOTAL "$$id"; \
 			else \
-				echo "  → Instalando App Store $$id..."; \
-				mas install "$$id" || echo "  ✗ Falló App Store $$id (verifica que estés logueado y que la app esté en tu biblioteca)"; \
+				LOG=/tmp/mas-$$id.log; \
+				if gum spin --spinner dot --title "[$$I/$$TOTAL] App Store id:$$id..." -- bash -c "mas install '$$id' > '$$LOG' 2>&1"; then \
+					printf "  [%2d/%d] \033[32m✓ id:%s\033[0m\n" $$I $$TOTAL "$$id"; \
+				else \
+					printf "  [%2d/%d] \033[31m✗ id:%s\033[0m — verifica login + biblioteca (%s):\n" $$I $$TOTAL "$$id" "$$LOG"; \
+					tail -5 "$$LOG" | sed 's/^/        /'; \
+				fi; \
 			fi; \
 		done; \
 	fi
-	@echo "[fzf] Configurando key bindings..."
+	@echo ""
+	@echo "═══ [fzf] Key bindings ═══"
 	@eval "$$(/opt/homebrew/bin/brew shellenv)" && \
 	if [ -x "$$(brew --prefix)/opt/fzf/install" ]; then \
-		yes | "$$(brew --prefix)/opt/fzf/install" --key-bindings --completion --no-update-rc >/dev/null && \
-		echo "  ✓ fzf configurado"; \
+		gum spin --spinner dot --title "Configurando fzf..." -- bash -c "yes | \"$$(brew --prefix)/opt/fzf/install\" --key-bindings --completion --no-update-rc >/dev/null"; \
+		printf "  \033[32m✓ fzf configurado\033[0m\n"; \
 	else \
-		echo "  ⚠ fzf no encontrado, saltando"; \
+		printf "  \033[33m⚠ fzf no encontrado, saltando\033[0m\n"; \
 	fi
 
 # ------------------------------------------------------------
