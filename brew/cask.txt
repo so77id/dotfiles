@@ -1,6 +1,7 @@
 claude
 claude-code
 docker
+font-meslo-lg-nerd-font
 iterm2
 keepingyouawake
 rectangle

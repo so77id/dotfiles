@@ -218,21 +218,24 @@ ITERM2_GUID       = AtelierSulphurpool-dotfiles
 
 iterm2:
 	@echo ""
-	@echo "═══ [iTerm2] Color preset ═══"
+	@echo "═══ [iTerm2] Color preset + font ═══"
 	@eval "$$(/opt/homebrew/bin/brew shellenv)" && \
 	if ! command -v jq >/dev/null 2>&1; then \
 		printf "  \033[33m⚠ jq no encontrado, saltando\033[0m\n"; \
 	else \
 		mkdir -p "$(ITERM2_DYN_DIR)"; \
 		LOG=/tmp/iterm2-preset.log; \
-		if gum spin --spinner dot --title "Generando perfil dinámico..." -- bash -c "plutil -convert json -o - '$(ITERM2_PRESET)' | jq '{Profiles: [. + {Name: \"AtelierSulphurpool\", Guid: \"$(ITERM2_GUID)\"}]}' > '$(ITERM2_DYN_FILE)' 2> '$$LOG'"; then \
-			printf "  \033[32m✓ Perfil 'AtelierSulphurpool' disponible en iTerm2\033[0m\n"; \
-			printf "  \033[33m→ Activa una vez: iTerm2 → Settings → Profiles → AtelierSulphurpool → Other Actions → Set as Default\033[0m\n"; \
+		if gum spin --spinner dot --title "Generando perfil dinámico (colores + fuente)..." -- bash -c "plutil -convert json -o - '$(ITERM2_PRESET)' | jq '{Profiles: [. + {Name: \"AtelierSulphurpool\", Guid: \"$(ITERM2_GUID)\", \"Normal Font\": \"MesloLGSNF-Regular 14\", \"Non Ascii Font\": \"MesloLGSNF-Regular 14\", \"Use Non-ASCII Font\": true, \"ASCII Anti Aliased\": true, \"Non-ASCII Anti Aliased\": true}]}' > '$(ITERM2_DYN_FILE)' 2> '$$LOG'"; then \
+			printf "  \033[32m✓ Perfil 'AtelierSulphurpool' generado (con MesloLGS NF)\033[0m\n"; \
 		else \
 			printf "  \033[31m✗ Falló generación\033[0m — log: %s\n" "$$LOG"; \
 			tail -5 "$$LOG" 2>/dev/null | sed 's/^/        /'; \
 		fi; \
+		defaults write com.googlecode.iterm2 "Default Bookmark Guid" -string "$(ITERM2_GUID)" 2>/dev/null && \
+			printf "  \033[32m✓ Perfil marcado como Default\033[0m\n" || \
+			printf "  \033[33m⚠ No pude setear default (hazlo manual)\033[0m\n"; \
 	fi
+	@printf "  \033[33m→ Reinicia iTerm2 (Cmd+Q y vuelve a abrir) para que cargue el perfil y la fuente\033[0m\n"
 
 # ------------------------------------------------------------
 # Symlinks de archivos de configuración
