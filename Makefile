@@ -167,52 +167,63 @@ brew_packages:
 # Oh My Zsh
 # ------------------------------------------------------------
 omz:
-	@echo "[Oh My Zsh] Verificando instalación..."
-	@if [ ! -d "$(OMZ_DIR)" ]; then \
-		echo "  Instalando Oh My Zsh..."; \
-		sh -c "$$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended --keep-zshrc; \
+	@echo ""
+	@echo "═══ [Oh My Zsh] ═══"
+	@if [ -d "$(OMZ_DIR)" ]; then \
+		printf "  \033[90m✓ Oh My Zsh (ya instalado)\033[0m\n"; \
 	else \
-		echo "  Oh My Zsh ya está instalado."; \
+		LOG=/tmp/omz-install.log; \
+		if gum spin --spinner dot --title "Instalando Oh My Zsh..." -- bash -c "sh -c \"\$$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\" '' --unattended --keep-zshrc > '$$LOG' 2>&1"; then \
+			printf "  \033[32m✓ Oh My Zsh instalado\033[0m\n"; \
+		else \
+			printf "  \033[31m✗ Falló Oh My Zsh\033[0m — log: %s\n" "$$LOG"; \
+			tail -8 "$$LOG" | sed 's/^/        /'; \
+		fi; \
 	fi
 
 # ------------------------------------------------------------
 # Plugins zsh + tema p10k
 # ------------------------------------------------------------
 plugins:
-	@echo "[Plugins zsh] Instalando..."
-	@if [ ! -d "$(P10K_DIR)" ]; then \
-		git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$(P10K_DIR)"; \
-	else \
-		echo "  powerlevel10k ya está instalado."; \
-	fi
-	@if [ ! -d "$(AUTOSUGGEST_DIR)" ]; then \
-		git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions "$(AUTOSUGGEST_DIR)"; \
-	else \
-		echo "  zsh-autosuggestions ya está instalado."; \
-	fi
-	@if [ ! -d "$(FAST_HL_DIR)" ]; then \
-		git clone --depth=1 https://github.com/zdharma-continuum/fast-syntax-highlighting "$(FAST_HL_DIR)"; \
-	else \
-		echo "  fast-syntax-highlighting ya está instalado."; \
-	fi
+	@echo ""
+	@echo "═══ [Plugins zsh] ═══"
+	@TOTAL=3; I=0; \
+	for entry in "powerlevel10k|$(P10K_DIR)|https://github.com/romkatv/powerlevel10k.git" \
+	             "zsh-autosuggestions|$(AUTOSUGGEST_DIR)|https://github.com/zsh-users/zsh-autosuggestions" \
+	             "fast-syntax-highlighting|$(FAST_HL_DIR)|https://github.com/zdharma-continuum/fast-syntax-highlighting"; do \
+		I=$$((I + 1)); \
+		NAME=$$(echo "$$entry" | cut -d'|' -f1); \
+		DIR=$$(echo "$$entry" | cut -d'|' -f2); \
+		URL=$$(echo "$$entry" | cut -d'|' -f3); \
+		if [ -d "$$DIR" ]; then \
+			printf "  [%d/%d] \033[90m✓ %s (ya instalado)\033[0m\n" $$I $$TOTAL "$$NAME"; \
+		else \
+			LOG=/tmp/plugin-$$NAME.log; \
+			if gum spin --spinner dot --title "[$$I/$$TOTAL] $$NAME..." -- bash -c "git clone --depth=1 '$$URL' '$$DIR' > '$$LOG' 2>&1"; then \
+				printf "  [%d/%d] \033[32m✓ %s\033[0m\n" $$I $$TOTAL "$$NAME"; \
+			else \
+				printf "  [%d/%d] \033[31m✗ %s\033[0m — log: %s\n" $$I $$TOTAL "$$NAME" "$$LOG"; \
+				tail -5 "$$LOG" | sed 's/^/        /'; \
+			fi; \
+		fi; \
+	done
 
 # ------------------------------------------------------------
 # Symlinks de archivos de configuración
 # ------------------------------------------------------------
 dotfiles_link:
 	@if [ ! -e "$(HOME)/.dotfiles" ]; then \
-		echo "[Symlink] ~/.dotfiles -> $(DOTFILES_FOLDER)"; \
 		ln -s "$(DOTFILES_FOLDER)" "$(HOME)/.dotfiles"; \
+		printf "  \033[32m✓ symlink ~/.dotfiles\033[0m\n"; \
 	fi
 
 symlinks: dotfiles_link
-	@echo "[Symlinks] zsh"
-	$(LN_COMMAND) $(ZSH_FOLDER)/$(ZSHRC_FILE)       $(HOME)/$(ZSHRC_FILE)
-	$(LN_COMMAND) $(ZSH_FOLDER)/$(ZSHRC_LOCAL_FILE) $(HOME)/$(ZSHRC_LOCAL_FILE)
-	$(LN_COMMAND) $(ZSH_FOLDER)/$(P10K_FILE)        $(HOME)/$(P10K_FILE)
-	@echo "[Symlinks] tmux"
-	$(LN_COMMAND) $(TMUX_FOLDER)/$(TMUXCONF_FILE)       $(HOME)/$(TMUXCONF_FILE)
-	$(LN_COMMAND) $(TMUX_FOLDER)/$(TMUXCONF_LOCAL_FILE) $(HOME)/$(TMUXCONF_LOCAL_FILE)
-	@echo "[Symlinks] git"
-	$(LN_COMMAND) $(GIT_FOLDER)/$(GITCONFIG_FILE) $(HOME)/$(GITCONFIG_FILE)
-	$(LN_COMMAND) $(GIT_FOLDER)/$(GITIGNORE_FILE) $(HOME)/.$(GITIGNORE_FILE)
+	@echo ""
+	@echo "═══ [Symlinks] ═══"
+	@$(LN_COMMAND) $(ZSH_FOLDER)/$(ZSHRC_FILE)          $(HOME)/$(ZSHRC_FILE)       && printf "  \033[32m✓\033[0m ~/.zshrc\n"
+	@$(LN_COMMAND) $(ZSH_FOLDER)/$(ZSHRC_LOCAL_FILE)    $(HOME)/$(ZSHRC_LOCAL_FILE) && printf "  \033[32m✓\033[0m ~/.zshrc.local\n"
+	@$(LN_COMMAND) $(ZSH_FOLDER)/$(P10K_FILE)           $(HOME)/$(P10K_FILE)        && printf "  \033[32m✓\033[0m ~/.p10k.zsh\n"
+	@$(LN_COMMAND) $(TMUX_FOLDER)/$(TMUXCONF_FILE)      $(HOME)/$(TMUXCONF_FILE)       && printf "  \033[32m✓\033[0m ~/.tmux.conf\n"
+	@$(LN_COMMAND) $(TMUX_FOLDER)/$(TMUXCONF_LOCAL_FILE) $(HOME)/$(TMUXCONF_LOCAL_FILE) && printf "  \033[32m✓\033[0m ~/.tmux.conf.local\n"
+	@$(LN_COMMAND) $(GIT_FOLDER)/$(GITCONFIG_FILE)      $(HOME)/$(GITCONFIG_FILE)   && printf "  \033[32m✓\033[0m ~/.gitconfig\n"
+	@$(LN_COMMAND) $(GIT_FOLDER)/$(GITIGNORE_FILE)      $(HOME)/.$(GITIGNORE_FILE)  && printf "  \033[32m✓\033[0m ~/.gitignore\n"
