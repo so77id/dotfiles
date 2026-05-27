@@ -48,7 +48,7 @@ ifeq ($(UNAME_S),Linux)
 RUN_FUNCTION = linux_install
 endif
 
-.PHONY: all install symlinks brew_install brew_packages omz plugins iterm2 default_browser macos_settings mac_install linux_install dotfiles_link
+.PHONY: all install symlinks brew_install brew_packages omz plugins iterm2 default_browser macos_settings macos_defaults mac_install linux_install dotfiles_link
 
 all: install
 
@@ -57,7 +57,7 @@ install: $(RUN_FUNCTION)
 # ------------------------------------------------------------
 # Bootstrap macOS completo
 # ------------------------------------------------------------
-mac_install: brew_install brew_packages omz plugins symlinks iterm2 default_browser macos_settings
+mac_install: brew_install brew_packages omz plugins symlinks iterm2 default_browser macos_settings macos_defaults
 	@echo ""
 	@echo "[OK] Instalación completa. Abre una nueva terminal o corre: source ~/.zshrc"
 	@echo "    Algunos cambios de idioma/teclado requieren logout para tomar efecto."
@@ -266,6 +266,33 @@ macos_settings:
 			printf "  \033[31m✗ No pude setear timezone (ver permisos)\033[0m\n"; \
 	fi
 	@printf "  \033[33m→ Idioma/teclado: haz logout (Cmd+Shift+Q) o reinicia para aplicar completo\033[0m\n"
+
+# ------------------------------------------------------------
+# macOS sensible defaults (smart quotes, finder, dock, screenshots, etc)
+# ------------------------------------------------------------
+MACOS_DEFAULTS_SCRIPT = $(DOTFILES_FOLDER)/macos/defaults.sh
+
+macos_defaults:
+	@echo ""
+	@echo "═══ [macOS] Sensible defaults ═══"
+	@eval "$$(/opt/homebrew/bin/brew shellenv)" && \
+	if [ ! -x "$(MACOS_DEFAULTS_SCRIPT)" ]; then \
+		printf "  \033[33m⚠ $(MACOS_DEFAULTS_SCRIPT) no encontrado o no ejecutable\033[0m\n"; \
+	else \
+		LOG=/tmp/macos-defaults.log; \
+		if gum spin --spinner dot --title "Aplicando defaults (smart quotes off, dock, finder, etc.)..." -- bash -c "'$(MACOS_DEFAULTS_SCRIPT)' > '$$LOG' 2>&1"; then \
+			printf "  \033[32m✓ Defaults aplicados\033[0m\n"; \
+			printf "  \033[90m   - Smart quotes/dashes/autocorrect OFF\033[0m\n"; \
+			printf "  \033[90m   - Mostrar extensiones + archivos ocultos\033[0m\n"; \
+			printf "  \033[90m   - Screenshots → ~/Downloads en formato JPG\033[0m\n"; \
+			printf "  \033[90m   - Key repeat rápido + tap-to-click\033[0m\n"; \
+			printf "  \033[90m   - Finder busca en carpeta actual\033[0m\n"; \
+			printf "  \033[90m   - Dock sin apps recientes\033[0m\n"; \
+		else \
+			printf "  \033[31m✗ Falló — log: %s\033[0m\n" "$$LOG"; \
+			tail -5 "$$LOG" 2>/dev/null | sed 's/^/        /'; \
+		fi; \
+	fi
 
 # ------------------------------------------------------------
 # Default browser
