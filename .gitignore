@@ -15,5 +15,10 @@ Thumbs.db
 
 *.zwc
 
-# Claude Code local settings (per-user)
+# Claude Code local settings (per-user, per-project)
 .claude/
+
+# Claude Code: versionamos claude/ (sin punto), pero NUNCA lo local/sensible
+claude/settings.local.json
+claude/**/*.local.json
+claude/**/*.dotfiles-bak

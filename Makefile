@@ -10,10 +10,11 @@ CURL_COMMAND   = curl -fsSL
 DOTFILES_FOLDER = $(PWD)
 
 # Carpetas del repo
-ZSH_FOLDER  = $(DOTFILES_FOLDER)/zsh
-TMUX_FOLDER = $(DOTFILES_FOLDER)/tmux
-GIT_FOLDER  = $(DOTFILES_FOLDER)/git
-BREW_FOLDER = $(DOTFILES_FOLDER)/brew
+ZSH_FOLDER    = $(DOTFILES_FOLDER)/zsh
+TMUX_FOLDER   = $(DOTFILES_FOLDER)/tmux
+GIT_FOLDER    = $(DOTFILES_FOLDER)/git
+BREW_FOLDER   = $(DOTFILES_FOLDER)/brew
+CLAUDE_FOLDER = $(DOTFILES_FOLDER)/claude
 
 # Archivos zsh
 ZSHRC_FILE       = .zshrc
@@ -48,7 +49,7 @@ ifeq ($(UNAME_S),Linux)
 RUN_FUNCTION = linux_install
 endif
 
-.PHONY: all install symlinks brew_install brew_packages omz plugins iterm2 default_browser macos_settings macos_defaults mac_install linux_install dotfiles_link
+.PHONY: all install symlinks brew_install brew_packages omz plugins iterm2 default_browser macos_settings macos_defaults claude mac_install linux_install dotfiles_link
 
 all: install
 
@@ -57,7 +58,7 @@ install: $(RUN_FUNCTION)
 # ------------------------------------------------------------
 # Bootstrap macOS completo
 # ------------------------------------------------------------
-mac_install: brew_install brew_packages omz plugins symlinks iterm2 default_browser macos_settings macos_defaults
+mac_install: brew_install brew_packages omz plugins symlinks iterm2 default_browser macos_settings macos_defaults claude
 	@echo ""
 	@echo "[OK] Instalación completa. Abre una nueva terminal o corre: source ~/.zshrc"
 	@echo "    Algunos cambios de idioma/teclado requieren logout para tomar efecto."
@@ -65,7 +66,7 @@ mac_install: brew_install brew_packages omz plugins symlinks iterm2 default_brow
 # ------------------------------------------------------------
 # Linux (esqueleto)
 # ------------------------------------------------------------
-linux_install: omz plugins symlinks
+linux_install: omz plugins symlinks claude
 	@echo "[OK] Instalación Linux completa (sin brew)."
 
 # ------------------------------------------------------------
@@ -341,3 +342,20 @@ symlinks: dotfiles_link
 	@$(LN_COMMAND) $(TMUX_FOLDER)/$(TMUXCONF_LOCAL_FILE) $(HOME)/$(TMUXCONF_LOCAL_FILE) && printf "  \033[32m✓\033[0m ~/.tmux.conf.local\n"
 	@$(LN_COMMAND) $(GIT_FOLDER)/$(GITCONFIG_FILE)      $(HOME)/$(GITCONFIG_FILE)   && printf "  \033[32m✓\033[0m ~/.gitconfig\n"
 	@$(LN_COMMAND) $(GIT_FOLDER)/$(GITIGNORE_FILE)      $(HOME)/.$(GITIGNORE_FILE)  && printf "  \033[32m✓\033[0m ~/.gitignore\n"
+
+# ------------------------------------------------------------
+# Claude Code: settings globales + hooks (symlinks selectivos)
+# ------------------------------------------------------------
+# NO se symlinkea ~/.claude completo: Claude Code escribe estado ahí
+# (sessions, history, telemetry, cache). Solo enlazamos config portable.
+claude:
+	@echo ""
+	@echo "═══ [Claude Code] settings + hooks ═══"
+	@mkdir -p $(HOME)/.claude/scripts
+	@if [ -e "$(HOME)/.claude/settings.json" ] && [ ! -L "$(HOME)/.claude/settings.json" ]; then \
+		mv "$(HOME)/.claude/settings.json" "$(HOME)/.claude/settings.json.dotfiles-bak"; \
+		printf "  \033[90m↪ backup: ~/.claude/settings.json.dotfiles-bak\033[0m\n"; \
+	fi
+	@$(LN_COMMAND) $(CLAUDE_FOLDER)/settings.json                  $(HOME)/.claude/settings.json                  && printf "  \033[32m✓\033[0m ~/.claude/settings.json\n"
+	@$(LN_COMMAND) $(CLAUDE_FOLDER)/scripts/block-sleep-polling.py $(HOME)/.claude/scripts/block-sleep-polling.py && printf "  \033[32m✓\033[0m ~/.claude/scripts/block-sleep-polling.py\n"
+	@chmod +x $(CLAUDE_FOLDER)/scripts/block-sleep-polling.py
