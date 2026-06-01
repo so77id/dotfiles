@@ -10,6 +10,7 @@ directorio `~/.claude` completo, porque ahí Claude escribe estado constante).
 |---|---|---|
 | `claude/settings.json` | `~/.claude/settings.json` | Config global: permissions, hooks, statusline (ccstatusline), plugins (agent-skills), `env`, teammateMode. |
 | `claude/scripts/block-sleep-polling.py` | `~/.claude/scripts/block-sleep-polling.py` | Hook PreToolUse que bloquea `sleep`/`until`/`while … sleep` en Bash. Referenciado por `settings.json`. |
+| `claude/ccstatusline/settings.json` | `~/.config/ccstatusline/settings.json` | **Diseño de la barra de estado** (segmentos, colores, layout de ccstatusline). `settings.json` solo invoca `npx ccstatusline`; el diseño vive aquí. |
 
 ## Qué queda FUERA a propósito
 

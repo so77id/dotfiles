@@ -200,6 +200,7 @@ Only the **portable** config is versioned (see [`claude/IDEAS.md`](claude/IDEAS.
 
 - [`claude/settings.json`](claude/settings.json) → `~/.claude/settings.json` — permissions, hooks, statusline, plugins, `env`
 - [`claude/scripts/block-sleep-polling.py`](claude/scripts/block-sleep-polling.py) → `~/.claude/scripts/` — PreToolUse hook blocking `sleep`/polling in Bash
+- [`claude/ccstatusline/settings.json`](claude/ccstatusline/settings.json) → `~/.config/ccstatusline/settings.json` — the status bar **design** (segments, colors, layout)
 - A previous real `settings.json` is backed up to `settings.json.dotfiles-bak` before linking
 - **Deliberately NOT versioned:** `settings.local.json`, `~/.claude.json`, and all `sessions/`, `history`, `telemetry/`, `cache/` (auth/secrets/runtime)
 
@@ -219,6 +220,8 @@ Only the **portable** config is versioned (see [`claude/IDEAS.md`](claude/IDEAS.
 │   ├── settings.json              # Claude Code global config (permissions, hooks, plugins)
 │   ├── scripts/
 │   │   └── block-sleep-polling.py # PreToolUse hook (blocks sleep/polling)
+│   ├── ccstatusline/
+│   │   └── settings.json          # Status bar design (segments, colors, layout)
 │   └── IDEAS.md                   # What's versioned + future ideas
 ├── git/
 │   ├── .gitconfig                 # Aliases, push/pull settings, identity

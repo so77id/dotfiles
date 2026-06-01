@@ -359,3 +359,9 @@ claude:
 	@$(LN_COMMAND) $(CLAUDE_FOLDER)/settings.json                  $(HOME)/.claude/settings.json                  && printf "  \033[32m✓\033[0m ~/.claude/settings.json\n"
 	@$(LN_COMMAND) $(CLAUDE_FOLDER)/scripts/block-sleep-polling.py $(HOME)/.claude/scripts/block-sleep-polling.py && printf "  \033[32m✓\033[0m ~/.claude/scripts/block-sleep-polling.py\n"
 	@chmod +x $(CLAUDE_FOLDER)/scripts/block-sleep-polling.py
+	@mkdir -p $(HOME)/.config/ccstatusline
+	@if [ -e "$(HOME)/.config/ccstatusline/settings.json" ] && [ ! -L "$(HOME)/.config/ccstatusline/settings.json" ]; then \
+		mv "$(HOME)/.config/ccstatusline/settings.json" "$(HOME)/.config/ccstatusline/settings.json.dotfiles-bak"; \
+		printf "  \033[90m↪ backup: ~/.config/ccstatusline/settings.json.dotfiles-bak\033[0m\n"; \
+	fi
+	@$(LN_COMMAND) $(CLAUDE_FOLDER)/ccstatusline/settings.json     $(HOME)/.config/ccstatusline/settings.json     && printf "  \033[32m✓\033[0m ~/.config/ccstatusline/settings.json (diseño de la barra)\n"
