@@ -1,4 +1,10 @@
 {
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
+  "attribution": {
+    "commit": ""
+  },
   "permissions": {
     "allow": [
       "Bash(git add:*)",
@@ -65,10 +71,8 @@
     }
   },
   "tui": "fullscreen",
+  "theme": "dark",
+  "teammateMode": "auto",
   "agentPushNotifEnabled": true,
-  "skipAutoPermissionPrompt": true,
-  "env": {
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
-  },
-  "teammateMode": "auto"
+  "skipAutoPermissionPrompt": true
 }
